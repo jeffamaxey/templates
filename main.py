@@ -9,8 +9,8 @@ import yaml
 
 def submit(job, workflow_data, server, token):
     headers = {
-        "Content-Type": f"application/json; charset=utf-8",
-        "Authorization": f"Bearer {token}"
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization": f"Bearer {token}",
     }
     data = {
         "user_name": workflow_data["user_name"],
@@ -59,7 +59,7 @@ if __name__ == '__main__':
         sys.exit("params.nodes.count in workflows.yaml should be an integer > 1")
     if not workflow_data["params"].get("training_script"):
         sys.exit("params.training_script in workflows.yaml is not specified")
-    print("WORKFLOW DATA: " + str(workflow_data))
+    print(f"WORKFLOW DATA: {str(workflow_data)}")
     nnode = workflow_data["params"]["nodes"]["count"]
     training_script = workflow_data["params"]["training_script"]
     # create 1 master job
@@ -88,7 +88,7 @@ if __name__ == '__main__':
         "resources": None,
         "working_dir": workflow_data["params"]["working_dir"] if workflow_data["params"].get("working_dir") else None
     }
-    print("MASTER JOB:" + str(master_job))
+    print(f"MASTER JOB:{master_job}")
     # submit(master_job, workflow_data, os.environ["DSTACK_SERVER"], os.environ["DSTACK_TOKEN"])
     for index in range(nnode - 1):
         dependent_commands = []
@@ -110,5 +110,5 @@ if __name__ == '__main__':
             "working_dir": workflow_data["params"]["working_dir"] if workflow_data["params"].get(
                 "working_dir") else None
         }
-        print("DEPENDANT JOB #" + str(index + 1) + ": " + str(dependent_job))
+        print(f"DEPENDANT JOB #{str(index + 1)}: {dependent_job}")
         # submit(dependent_job, workflow_data, os.environ["DSTACK_SERVER"], os.environ["DSTACK_TOKEN"])
